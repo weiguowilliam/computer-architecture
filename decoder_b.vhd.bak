@@ -1,0 +1,21 @@
+--
+-- VHDL Architecture my_project4_lib.decoder.b
+--
+-- Created:
+--          by - Wei Guo.UNKNOWN (MSI)
+--          at - 14:53:54 03/19/2018
+--
+-- using Mentor Graphics HDL Designer(TM) 2015.1b (Build 4)
+--
+LIBRARY ieee;
+USE ieee.std_logic_1164.all;
+USE ieee.std_logic_arith.all;
+
+ENTITY decoder IS
+END ENTITY decoder;
+
+--
+ARCHITECTURE b OF decoder IS
+BEGIN
+END ARCHITECTURE b;
+

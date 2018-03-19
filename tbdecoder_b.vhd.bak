@@ -1,0 +1,115 @@
+--
+-- VHDL Architecture my_project4_lib.tbdecoder.b
+--
+-- Created:
+--          by - Wei Guo.UNKNOWN (MSI)
+--          at - 21:36:19 03/ 1/2018
+--
+-- using Mentor Graphics HDL Designer(TM) 2015.1b (Build 4)
+--
+LIBRARY ieee;
+USE ieee.std_logic_1164.all;
+USE ieee.std_logic_arith.all;
+USE std.textio.all;
+USE work.RV32I.all;
+
+ENTITY tbdecoder IS
+  signal clock : std_ulogic;
+END ENTITY tbdecoder;
+
+--
+ARCHITECTURE b OF tbdecoder IS
+  
+  FILE test_vectors : text OPEN read_mode IS "testdecoder.txt";
+  
+  SIGNAL vecno : NATURAL := 0;
+  --signal clock : std_ulogic;
+  signal instruction :  std_ulogic_vector(31 downto 0);
+  signal func, vfunc : RV32I_Op;
+  signal rs1, rs2, rd, vrs1, vrs2, vrd  : std_ulogic_vector(4 downto 0); -- register id
+  signal rs1v, rs2v, rdv, vrs1v, vrs2v, vrdv : std_ulogic;
+  signal immediate, vimmediate : std_ulogic_vector(31 downto 0);
+  
+-- duv
+BEGIN
+DUV: entity work.decoder(b)
+  port map(instruction=> instruction, func=>func, rs1 => rs1, rs2 => rs2, rd =>rd, rs1v => rs1v, rs2v => rs2v, rdv => rdv, immediate => immediate);
+
+--stimulate process
+  Stim: process
+  VARIABLE L : LINE;
+  variable FunName : Func_Name;
+  variable instructionval :  std_ulogic_vector(31 downto 0);
+  variable funcval: RV32I_Op;
+  variable rs1val, rs2val, rdval: std_ulogic_vector(4 downto 0);
+  variable rs1vval, rs2vval, rdvval : std_ulogic;
+  variable immediateval: std_ulogic_vector(31 downto 0);
+
+BEGIN
+  Clock <= '0';
+  wait for 50 ns;
+  readline(test_vectors, L);
+  
+  while not endfile(test_vectors) loop
+    readline(test_vectors, L);
+    
+    read(L, FunName);
+    vfunc <= Ftype(FunName);
+    read(L, rs1val);
+    vrs1 <= rs1val;
+    read(L, rs2val);
+    vrs2 <= rs2val;
+    read(L, rdval);
+    vrd <= rdval;
+    read(L, rs1vval);
+    vrs1v <= rs1vval;
+    read(L, rs2vval);
+    vrs2v <= rs2vval;
+    read(L, rdvval);
+    vrdv <= rdvval;
+    read(L, immediateval);
+    vimmediate <= immediateval;
+    
+    read(L, instructionval);
+    instruction <= instructionval;
+    
+    Clock <= '1';
+  wait for 50 ns;
+  Clock <= '0';
+  wait for 50 ns;
+    
+    --wait for 100 ns;
+  end loop;
+
+report "End of Testbench";
+std.env.finish;
+
+end process;
+  
+-- check process
+Check : PROCESS(clock)
+BEGIN
+  IF (falling_edge(clock)) THEN
+    ASSERT func = vfunc
+      Report "function type error";
+    ASSERT rs1 = vrs1
+      Report "rs1 error";
+    ASSERT rs2 = vrs2
+      Report "rs2 error";
+    ASSERT rd = vrd
+      Report "rd error";
+    ASSERT rs1v = vrs1v
+      Report "rs1v error";
+    ASSERT rs2v = vrs2v
+      Report "rs2v error";
+    ASSERT rdv = vrdv
+      Report "rdv error";
+    ASSERT immediate = vimmediate
+      Report "immediate value error";
+    
+    vecno <= vecno + 1;
+  END IF;
+END PROCESS;
+  
+END ARCHITECTURE b;
+

@@ -1,0 +1,21 @@
+--
+-- VHDL Architecture my_project4_lib.incrementor.b
+--
+-- Created:
+--          by - Wei Guo.UNKNOWN (MSI)
+--          at - 20:42:04 02/11/2018
+--
+-- using Mentor Graphics HDL Designer(TM) 2015.1b (Build 4)
+--
+LIBRARY ieee;
+USE ieee.std_logic_1164.all;
+USE ieee.std_logic_arith.all;
+
+ENTITY incrementor IS
+END ENTITY incrementor;
+
+--
+ARCHITECTURE b OF incrementor IS
+BEGIN
+END ARCHITECTURE b;
+
