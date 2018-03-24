@@ -44,7 +44,8 @@ regins: entity work.reg(b)
     port map(instruction=>instr, func=>funco, rs1=>rs1o, rs2=>rs2o,rd=>rdo,rs1v=>rs1vo,rs2v=>rs2vo,rdv=>rdvo,immediate=>immediateo);
 
   inc: entity work.inc(b)
-    port map(d0 => instr, d1 => pcc, q => Oinc);
+    --port map(d0 => instr, d1 => pcc, q => Oinc);
+    port map(d0 => immediateo, d1 => pcc, q => Oinc);
   
   inc2: entity work.inc(b)
     port map(d0 => pcc, d1 =>"00000000000000000000000000000100", q => Oinc2);
